@@ -41,7 +41,8 @@ export default function UserSignIn({ setIsAuthenticated }) {
   const [authErrMsg, setAuthErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const Navigate = useNavigate();
-  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
+  const port =
+    process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
 
   const signIn = async (data) => {
     try {

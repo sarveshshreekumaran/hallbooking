@@ -16,7 +16,8 @@ export default function Home({ outlet }) {
   const [halls, setHalls] = useState([]);
   const [hallsLoading, setHallsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
+  const port =
+    process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
 
   useEffect(() => {
     const getHalls = async () => {

@@ -41,7 +41,8 @@ export default function SignUp() {
   const [errMsg, setErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate("/");
-  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
+  const port =
+    process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
 
   const signUp = async (data) => {
     try {

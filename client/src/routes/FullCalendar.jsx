@@ -7,7 +7,8 @@ import { useParams } from "react-router-dom";
 const FullCalendarComponent = ({ jwt }) => {
   const [events, setEvents] = useState([]);
   let { id } = useParams();
-  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
+  const port =
+    process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
 
   useEffect(() => {
     // Fetch events from server on mount
