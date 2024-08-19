@@ -41,19 +41,17 @@ export default function SignUp() {
   const [errMsg, setErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   let Navigate = useNavigate();
+  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
 
   const signUp = async (data) => {
     try {
-      const response = await fetch(
-        "http://localhost:4000/bridegroom/register",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${port}/bridegroom/register`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(data),
+      });
       if (!response.ok) {
         throw new Error(
           `Response status: ${response.status} ${response.statusText}`

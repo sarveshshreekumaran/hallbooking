@@ -41,10 +41,11 @@ export default function UserSignIn({ setIsAuthenticated }) {
   const [authErrMsg, setAuthErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const Navigate = useNavigate();
+  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
 
   const signIn = async (data) => {
     try {
-      const response = await fetch("http://localhost:4000/bridegroom/login", {
+      const response = await fetch(`${port}/bridegroom/login`, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -7,20 +7,18 @@ import { useParams } from "react-router-dom";
 const FullCalendarComponent = ({ jwt }) => {
   const [events, setEvents] = useState([]);
   let { id } = useParams();
+  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
 
   useEffect(() => {
     // Fetch events from server on mount
     const getHallEvents = async () => {
-      const response = await fetch(
-        `http://localhost:4000/register-hall/${id}`,
-        {
-          method: "get",
-          mode: "cors",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      );
+      const response = await fetch(`${port}/register-hall/${id}`, {
+        method: "get",
+        mode: "cors",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
       return response;
     };
 
@@ -32,7 +30,7 @@ const FullCalendarComponent = ({ jwt }) => {
         // console.log(await response.json());
       }
     });
-  }, [id, jwt]);
+  }, [id, port, jwt]);
 
   const handleEventAdd = async (info) => {
     const title = prompt("Enter event title here!");
@@ -46,19 +44,16 @@ const FullCalendarComponent = ({ jwt }) => {
       // Create
       // console.log("Event created:", event);
       // Send data to server to save
-      const response = await fetch(
-        `http://localhost:4000/register-hall/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-          method: "POST",
-          body: JSON.stringify({
-            events: [event],
-          }),
-        }
-      );
+      const response = await fetch(`${port}/register-hall/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          events: [event],
+        }),
+      });
 
       if (!response.ok) {
         console.log(response.status);

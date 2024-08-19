@@ -41,10 +41,11 @@ export default function SignUp() {
   const [errMsg, setErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate("/");
+  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
 
   const signUp = async (data) => {
     try {
-      const response = await fetch("http://localhost:4000/hall/register", {
+      const response = await fetch(`${port}/hall/register`, {
         headers: {
           "Content-Type": "application/json",
         },

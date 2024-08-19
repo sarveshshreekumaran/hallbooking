@@ -16,11 +16,12 @@ export default function Home({ outlet }) {
   const [halls, setHalls] = useState([]);
   const [hallsLoading, setHallsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const port = process.env.PRODUCTION_PORT || process.env.PRODUCTION_PORT;
 
   useEffect(() => {
     const getHalls = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/hall/all-halls`, {
+        const response = await fetch(`${port}/hall/all-halls`, {
           method: "get",
           mode: "cors",
         });
@@ -42,7 +43,7 @@ export default function Home({ outlet }) {
     };
 
     getHalls();
-  }, []);
+  }, [port]);
 
   return (
     <React.Fragment>
