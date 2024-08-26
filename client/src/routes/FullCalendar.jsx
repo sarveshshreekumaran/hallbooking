@@ -3,34 +3,35 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useParams } from "react-router-dom";
+import axios from "../api/axios";
 
 const FullCalendarComponent = ({ jwt }) => {
   const [events, setEvents] = useState([]);
   let { id } = useParams();
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
+  const HALLDETAILS_ENDPOINT = `/register-hall/${id}`;
 
   useEffect(() => {
     // Fetch events from server on mount
     const getHallEvents = async () => {
-      const response = await fetch(`${port}/register-hall/${id}`, {
-        method: "get",
-        mode: "cors",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      return response;
-    };
-
-    getHallEvents().then(async (response) => {
-      if (response.ok) {
-        const data = await response.json();
+      try {
+        const response = await axios.get(HALLDETAILS_ENDPOINT, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        const { data } = response;
         setEvents(data.events);
-      } else {
-        // console.log(await response.json());
+      } catch (error) {
+        if (error?.response) {
+          console.log("No Server response");
+        } else {
+          console.log(error.message);
+        }
       }
-    });
+    };
+    getHallEvents();
   }, [id, port, jwt]);
 
   const handleEventAdd = async (info) => {

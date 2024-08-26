@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios.js";
 
 function Copyright(props) {
   return (
@@ -43,24 +44,25 @@ export default function SignUp() {
   const navigate = useNavigate("/");
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
+  const REGISTER_ENDPOINT = "/hall/register";
 
-  const signUp = async (data) => {
+  const signUp = async (payload) => {
     try {
-      const response = await fetch(`${port}/hall/register`, {
+      const response = await axios.post(REGISTER_ENDPOINT, payload, {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: JSON.stringify(data),
       });
-      if (!response.ok) {
-        throw new Error(
-          `Response status: ${response.status} ${response.statusText}`
-        );
-      }
+      const { data } = response;
       navigate("/");
+      console.log(data);
     } catch (error) {
-      setErrMsg(error.message);
+      console.log(error?.response);
+      if (!error?.response) {
+        setErrMsg("No Server Response");
+      } else {
+        setErrMsg(error.message);
+      }
     } finally {
       setIsLoading(false);
     }

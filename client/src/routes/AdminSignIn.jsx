@@ -13,6 +13,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 
 function Copyright(props) {
   return (
@@ -42,26 +43,29 @@ export default function SignInSide({ setIsAuthenticated }) {
   const Navigate = useNavigate();
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
+  const LOGIN_ENDPOINT = "/hall/login";
 
-  const signIn = async (data) => {
+  const signIn = async (payload) => {
     try {
-      const response = await fetch(`${port}/hall/login`, {
+      const response = await axios.post(LOGIN_ENDPOINT, payload, {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: JSON.stringify(data),
       });
-      if (!response.ok) {
-        throw new Error(
-          `Response status: ${response.status} ${response.statusText}`
-        );
-      }
-      const json = await response.json();
-      setIsAuthenticated(json.jwtAccessToken);
+      const { data } = response;
+      setIsAuthenticated(data.jwtAccessToken);
       Navigate("/");
     } catch (error) {
-      setAuthErrMsg(error.message);
+      console.log(error?.response);
+      if (!error?.response) {
+        setAuthErrMsg("No Server Response");
+      } else if (error.response?.status === 400) {
+        setAuthErrMsg("Missing Username or Password");
+      } else if (error.response?.status === 401) {
+        setAuthErrMsg("Unauthorized");
+      } else {
+        setAuthErrMsg(error.message);
+      }
     } finally {
       setIsLoading(false);
     }

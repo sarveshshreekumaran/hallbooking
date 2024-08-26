@@ -10,6 +10,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 
 export default function Home({ outlet }) {
   const navigate = useNavigate();
@@ -18,23 +19,14 @@ export default function Home({ outlet }) {
   const [errorMsg, setErrorMsg] = useState("");
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
-
+  const ALLHALLS_ENDPOINT = "/hall/all-halls";
   useEffect(() => {
     const getHalls = async () => {
       try {
-        const response = await fetch(`${port}/hall/all-halls`, {
-          method: "get",
-          mode: "cors",
-        });
+        const response = await axios.get(ALLHALLS_ENDPOINT);
+        const { data } = response;
 
-        if (!response.ok) {
-          throw new Error(
-            `Response status: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const halls = await response.json();
-        setHalls(halls);
+        setHalls(data);
       } catch (error) {
         setErrorMsg(error.message);
         console.log(error);

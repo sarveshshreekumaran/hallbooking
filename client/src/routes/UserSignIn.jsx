@@ -14,6 +14,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 
 function Copyright(props) {
   return (
@@ -43,24 +44,16 @@ export default function UserSignIn({ setIsAuthenticated }) {
   const Navigate = useNavigate();
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
-
-  const signIn = async (data) => {
+  const LOGIN_ENDPOINT = "/bridegroom/login";
+  const signIn = async (payload) => {
     try {
-      const response = await fetch(`${port}/bridegroom/login`, {
+      const response = await axios.post(LOGIN_ENDPOINT, payload, {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: JSON.stringify(data),
       });
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(
-          `Response status: ${response.status} ${response.statusText} ${message}`
-        );
-      }
-      const json = await response.json();
-      setIsAuthenticated(json.jwtAccessToken);
+      const { data } = response;
+      setIsAuthenticated(data.jwtAccessToken);
       Navigate("/");
     } catch (error) {
       setAuthErrMsg(error.message);

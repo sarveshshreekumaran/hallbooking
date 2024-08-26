@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 
 function Copyright(props) {
   return (
@@ -43,21 +44,19 @@ export default function SignUp() {
   let Navigate = useNavigate();
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
-
-  const signUp = async (data) => {
+  const REGISTER_ENDPOINT = "/bridegroom/register";
+  const signUp = async (payload) => {
     try {
-      const response = await fetch(`${port}/bridegroom/register`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error(
-          `Response status: ${response.status} ${response.statusText}`
-        );
-      }
+      const response = await axios.post(
+        `${port}/bridegroom/register`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       Navigate("/");
     } catch (error) {
       setErrMsg(error.message);
