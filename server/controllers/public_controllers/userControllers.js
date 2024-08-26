@@ -52,7 +52,6 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({
       message: "Bride/BrideGroom registered successfully",
-      success: true,
       bridegroom,
       jwtAccessToken,
     });
@@ -74,7 +73,6 @@ const loginUser = async (req, res) => {
       const jwtAccessToken = accessToken(bridegroom._id);
       res.status(200).json({
         message: "BrideGroom logged in successfully",
-        success: true,
         jwtAccessToken,
       });
     } else {

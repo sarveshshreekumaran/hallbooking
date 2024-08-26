@@ -32,8 +32,6 @@ const registerAdmin = async (req, res) => {
       password,
     } = req.body;
 
-    console.log(req.body);
-
     const alreadyRegisteredHall = await Hall.findOne({ email: email });
 
     if (alreadyRegisteredHall) {
@@ -66,7 +64,6 @@ const registerAdmin = async (req, res) => {
 
     res.status(201).json({
       message: "Hall registered successfully",
-      success: true,
       hall,
       jwtAccessToken,
     });
@@ -79,16 +76,20 @@ const registerAdmin = async (req, res) => {
 const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username & password are required." });
+    }
     const hall = await Hall.findOne({ email: email });
     if (!hall) {
-      return res.json({ message: "Hall not found" });
+      return res.status(404).json({ message: "Hall not found" });
     }
     const checkPassword = await bcrypt.compare(password, hall.password);
     if (checkPassword) {
       const jwtAccessToken = accessToken(hall._id);
       res.status(200).json({
         message: "Hall login successfully",
-        success: true,
         jwtAccessToken,
       });
     } else {
