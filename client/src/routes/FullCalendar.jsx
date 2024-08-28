@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
+import { AuthContext } from "../context/AuthProvider";
 
-const FullCalendarComponent = ({ jwt }) => {
+const FullCalendarComponent = () => {
   const [events, setEvents] = useState([]);
+  const { auth } = useContext(AuthContext);
+  const accessToken = auth.accessToken;
+
   let { id } = useParams();
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
@@ -18,7 +22,7 @@ const FullCalendarComponent = ({ jwt }) => {
       try {
         const response = await axios.get(HALLDETAILS_ENDPOINT, {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
         const { data } = response;
@@ -32,7 +36,7 @@ const FullCalendarComponent = ({ jwt }) => {
       }
     };
     getHallEvents();
-  }, [id, port, jwt]);
+  }, [id, port, HALLDETAILS_ENDPOINT, accessToken]);
 
   const handleEventAdd = async (info) => {
     const title = prompt("Enter event title here!");
@@ -49,7 +53,7 @@ const FullCalendarComponent = ({ jwt }) => {
       const response = await fetch(`${port}/register-hall/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         method: "POST",
         body: JSON.stringify({

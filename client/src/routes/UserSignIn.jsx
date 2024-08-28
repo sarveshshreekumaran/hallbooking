@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
+import { AuthContext } from "../context/AuthProvider";
 
 function Copyright(props) {
   return (
@@ -41,6 +42,7 @@ const defaultTheme = createTheme();
 export default function UserSignIn({ setIsAuthenticated }) {
   const [authErrMsg, setAuthErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { setAuth } = useContext(AuthContext);
   const Navigate = useNavigate();
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
@@ -53,7 +55,8 @@ export default function UserSignIn({ setIsAuthenticated }) {
         },
       });
       const { data } = response;
-      setIsAuthenticated(data.jwtAccessToken);
+      const accessToken = data.jwtAccessToken;
+      setAuth({ accessToken });
       Navigate("/");
     } catch (error) {
       setAuthErrMsg(error.message);

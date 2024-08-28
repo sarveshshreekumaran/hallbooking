@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 // import './App.css';
-import React, { useState } from "react";
+import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root";
 import ErrorPage from "./error-page";
@@ -11,10 +11,9 @@ import UserSignUp from "./routes/UserSignUp";
 import UserSignIn from "./routes/UserSignIn";
 import FullCalendar from "./routes/FullCalendar";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthProvider";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -27,25 +26,25 @@ function App() {
         },
         {
           path: "admin/signup",
-          element: <AdminSignUp setIsAuthenticated={setIsAuthenticated} />,
+          element: <AdminSignUp />,
         },
         {
           path: "admin/signin",
-          element: <AdminSignIn setIsAuthenticated={setIsAuthenticated} />,
+          element: <AdminSignIn />,
         },
         {
           path: "user/signup",
-          element: <UserSignUp setIsAuthenticated={setIsAuthenticated} />,
+          element: <UserSignUp />,
         },
         {
           path: "user/signin",
-          element: <UserSignIn setIsAuthenticated={setIsAuthenticated} />,
+          element: <UserSignIn />,
         },
         {
           path: "hall/:id",
           element: (
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <FullCalendar jwt={isAuthenticated} />
+            <ProtectedRoute>
+              <FullCalendar />
             </ProtectedRoute>
           ),
         },
@@ -55,7 +54,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </>
   );
 }

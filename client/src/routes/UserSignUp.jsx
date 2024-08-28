@@ -47,15 +47,11 @@ export default function SignUp() {
   const REGISTER_ENDPOINT = "/bridegroom/register";
   const signUp = async (payload) => {
     try {
-      const response = await axios.post(
-        `${port}/bridegroom/register`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(REGISTER_ENDPOINT, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       Navigate("/");
     } catch (error) {

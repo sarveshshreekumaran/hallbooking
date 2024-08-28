@@ -12,7 +12,7 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 
-export default function Home({ outlet }) {
+export default function Home() {
   const navigate = useNavigate();
   const [halls, setHalls] = useState([]);
   const [hallsLoading, setHallsLoading] = useState(true);
