@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import { AuthContext } from "../context/AuthProvider";
+import useAuth from "../hooks/useAuth";
 
 function Copyright(props) {
   return (
@@ -39,11 +39,12 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function UserSignIn({ setIsAuthenticated }) {
+export default function UserSignIn() {
   const [authErrMsg, setAuthErrMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
   const Navigate = useNavigate();
+  // eslint-disable-next-line
   const port =
     process.env.REACT_APP_PRODUCTION_PORT || process.env.REACT_APP_DEV_PORT;
   const LOGIN_ENDPOINT = "/bridegroom/login";
